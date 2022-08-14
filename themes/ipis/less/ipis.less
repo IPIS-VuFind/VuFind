@@ -1,3 +1,66 @@
-body {
-    //background-color: red;
+
+// IPIS red: #ed2326
+
+// Some variables - override from /home/betullam/dev/vufind-ipis/themes/bootstrap3/less/vendor/bootstrap/variables.less
+@brand-primary: #ed2326;
+@link-color: #ed2326;
+
+a, a:hover, a:active, a:focus {
+    outline: none;
+}
+
+header .container.navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-header {
+    // This shrinks the logo image
+    max-width: 18%;
+}
+
+.navbar-brand {
+    height: auto;
+    padding-left: 0;
+}
+
+.nav.searchbox, #searchForm, .ipis-searchform-lookfor-input-group, #searchForm_lookfor {
+    width: 100%;
+}
+
+#searchForm_lookfor {
+    max-width: 100%;
+    height: auto;
+    font-size: x-large;
+
+    // Bottom border
+	box-shadow: none;
+    border-top: none;
+	border-left: none;
+	border-right: none;
+    border-radius: 0;
+	border-bottom: gray;
+	border-bottom-style: solid;
+}
+
+.ipis-searchform-lookfor-input-group-btn {
+    border-bottom: gray;
+	border-bottom-style: solid;
+}
+
+.navbar-form .input-group .input-group-btn {
+    width: 0;
+}
+
+.ipis-searchform-lookfor-input-group-btn .btn {
+    border: none;
+    color: #a0a0a0;
+    font-size: x-large;
+}
+
+.ipis-searchform-lookfor-input-group-btn .btn:hover, .ipis-searchform-lookfor-input-group-btn .btn:active, .ipis-searchform-lookfor-input-group-btn .btn:focus {
+    border: none;
+    color: gray;
+    background-color: white;
 }
