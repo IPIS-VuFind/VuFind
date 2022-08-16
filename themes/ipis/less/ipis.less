@@ -5,6 +5,7 @@
 @brand-primary: #ed2326;
 @link-color: #ed2326;
 
+// Remove dotted border around links
 a, a:hover, a:active, a:focus {
     outline: none;
 }
@@ -15,9 +16,8 @@ header .container.navbar {
     align-items: center;
 }
 
-.navbar-header {
-    // This shrinks the logo image
-    max-width: 18%;
+header .banner.container.navbar .search {
+    width: 100%;
 }
 
 .navbar-brand {
@@ -27,6 +27,30 @@ header .container.navbar {
 
 .nav.searchbox, #searchForm, .ipis-searchform-lookfor-input-group, #searchForm_lookfor {
     width: 100%;
+}
+
+.ipis-logo {
+    background-image: url('../images/ipis-logo.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 200px;
+    height: 71px;
+}
+
+.ipis-logo-searchform-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ipis-searchform-wrapper {
+    width: 100%
+}
+
+#searchForm {
+    display: flex;
+    flex-direction: column;
 }
 
 #searchForm_lookfor {
@@ -63,4 +87,34 @@ header .container.navbar {
     border: none;
     color: gray;
     background-color: white;
+}
+
+// Remove because we don't need a mobile "3-bars" menu to pop up
+#header-collapse {
+    display: none !important;
+}
+
+@media (min-width: 768px) {
+    .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 650px) {
+    // Small logo on smaller screens
+    .ipis-logo {
+        background-image: url('../images/ipis-logo-small.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 72px;
+        height: 71px;
+    }
+}
+
+@media (max-width: 370px) {
+    // No logo on very small screens
+    .ipis-logo {
+        display: none;
+    }
 }

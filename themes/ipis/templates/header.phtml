@@ -1,23 +1,18 @@
 <?php $account = $this->auth()->getManager(); ?>
 <div class="banner container navbar">
+  <?php // IPIS: Remove mobile menu bars - we don't need them
+  /*
   <div class="navbar-header">
-    <?php // IPIS: Remove mobile menu bars - we don't need them
-    /*
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#header-collapse" aria-hidden="true">
       <i class="fa fa-bars"></i>
     </button>
-    */
-    ?>
-
-    <?php // IPIS: Adding logo ?>
-    <a class="navbar-brand lang-<?=$this->layout()->userLang ?>" href="<?=$this->url('home')?>">
-        <img src="<?=$this->imageLink('ipis-logo.png')?>" alt="IPIS Logo" class="ipis-logo" />
-    </a>
   </div>
+  */
+  ?>
 
   <?php // IPIS: Adding searchbox further up in the header and removing it from below ?>
   <?php if ($this->layout()->searchbox !== false): ?>
-    <div class="search container navbar">
+    <div class="search">
         <div class="nav searchbox hidden-print" role="search">
         <?=$this->layout()->searchbox ?>
         </div>

@@ -67,110 +67,137 @@
   </div>
 <?php else: ?>
   <form id="searchForm" class="searchForm navbar-form navbar-left flip" method="get" action="<?=$this->url($basicSearch)?>" name="searchForm" autocomplete="off">
-    <?= $this->context($this)->renderInContext('search/searchTabs', ['searchTabs' => $tabConfig['tabs'], 'showCounts' => $tabConfig['showCounts']]); ?>
-    <?php $placeholder = $this->searchbox()->getPlaceholderText($tabConfig['selected']['id'] ?? null); ?>
-    
-    <?php // IPIS: Use bootstrap "Input groups" to add buttons into the searchbox ?>
-    <div class="input-group ipis-searchform-lookfor-input-group">
-        <input id="searchForm_lookfor" class="searchForm_lookfor form-control search-query<?php if($this->searchbox()->autocompleteEnabled($this->searchClassId)):?> autocomplete searcher:<?=$this->escapeHtmlAttr($this->searchClassId) ?><?=$this->searchbox()->autocompleteAutoSubmit($this->searchClassId) ? ' ac-auto-submit' : '' ?><?php endif ?>" type="text" name="lookfor" value="<?=$this->escapeHtmlAttr($this->lookfor)?>"<?php if ($placeholder): ?> placeholder="<?=$this->transEscAttr($placeholder) ?>"<?php endif ?> aria-label="<?=$this->transEscAttr("search_terms")?>" />
-        <div class="input-group-btn ipis-searchform-lookfor-input-group-btn">
-            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-            <?php if ($advSearch): ?>
-                <a href="<?=$this->url($advSearch) . (($this->searchId ?? false) ? '?edit=' . $this->escapeHtmlAttr($this->searchId) : $hiddenFilterParams) ?>" class="btn btn-link" rel="nofollow"><i class="fa fa-search-plus"></i></a>
+    <div class="ipis-logo-searchform-wrapper">
+
+        <?php // IPIS: Adding logo here instead of header.phtml. No we can put it on the left side of the
+              // search form and having the active filters under the logo and the search form instead of only
+              // under the search form. ?>
+        <?php // IPIS: Logo with <img> tag. Works, but we use a div with background image so that we can change this
+              // background image on smaller screens.
+        /*
+        <div class="ipis-logo-wrapper">
+            <a class="navbar-brand lang-<?=$this->layout()->userLang ?>" href="<?=$this->url('home')?>">
+                <img src="<?=$this->imageLink('ipis-logo.png')?>" alt="IPIS Logo" class="ipis-logo" />
+            </a>
+        </div>
+        */
+        ?>
+        <?php // IPIS: Div with background image instead of <img> for logo ?>
+        <div class="ipis-logo-wrapper">
+            <a class="navbar-brand lang-<?=$this->layout()->userLang ?>" href="<?=$this->url('home')?>">
+                <div class="ipis-logo"></div>
+            </a>
+        </div>
+
+        <div class="ipis-searchform-wrapper">
+            <?= $this->context($this)->renderInContext('search/searchTabs', ['searchTabs' => $tabConfig['tabs'], 'showCounts' => $tabConfig['showCounts']]); ?>
+            <?php $placeholder = $this->searchbox()->getPlaceholderText($tabConfig['selected']['id'] ?? null); ?>
+            
+            <?php // IPIS: Use bootstrap "Input groups" to add buttons into the searchbox ?>
+            <div class="input-group ipis-searchform-lookfor-input-group">
+                <input id="searchForm_lookfor" class="searchForm_lookfor form-control search-query<?php if($this->searchbox()->autocompleteEnabled($this->searchClassId)):?> autocomplete searcher:<?=$this->escapeHtmlAttr($this->searchClassId) ?><?=$this->searchbox()->autocompleteAutoSubmit($this->searchClassId) ? ' ac-auto-submit' : '' ?><?php endif ?>" type="text" name="lookfor" value="<?=$this->escapeHtmlAttr($this->lookfor)?>"<?php if ($placeholder): ?> placeholder="<?=$this->transEscAttr($placeholder) ?>"<?php endif ?> aria-label="<?=$this->transEscAttr("search_terms")?>" />
+                <div class="input-group-btn ipis-searchform-lookfor-input-group-btn">
+                    <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                    <?php if ($advSearch): ?>
+                        <a href="<?=$this->url($advSearch) . (($this->searchId ?? false) ? '?edit=' . $this->escapeHtmlAttr($this->searchId) : $hiddenFilterParams) ?>" class="btn btn-link" rel="nofollow"><i class="fa fa-search-plus"></i></a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <?php if ($handlerCount > 1): ?>
+            <select id="searchForm_type" class="searchForm_type form-control" name="type" data-native-menu="false" aria-label="<?=$this->transEscAttr("Search type")?>">
+                <?php $currentGroup = $insideGroup = false; ?>
+                <?php foreach ($handlers as $handler): ?>
+                <?php
+                    if ($currentGroup !== ($handler['group'] ?? false)) {
+                    $currentGroup = $handler['group'];
+                    if ($insideGroup) {
+                        echo '</optgroup>';
+                    }
+                    if ($currentGroup) {
+                        echo '<optgroup label="' . $this->escapeHtmlAttr($currentGroup) . '">';
+                        $insideGroup = true;
+                    } else {
+                        $insideGroup = false;
+                    }
+                    }
+                ?>
+                <option value="<?=$this->escapeHtmlAttr($handler['value'])?>"<?=$handler['selected'] ? ' selected="selected"' : ''?>><?=$handler['indent'] ? '-- ' : ''?><?=$this->transEsc($handler['label'])?></option>
+                <?php endforeach; ?>
+                <?php if ($insideGroup): ?>
+                </optgroup>
+                <?php endif; ?>
+            </select>
+            <?php elseif ($handlerCount == 1): ?>
+            <input type="hidden" name="type" value="<?=$this->escapeHtmlAttr($handlers[0]['value'])?>" />
             <?php endif; ?>
+            <?php
+            // IPIS: Remove submit button, link to advanced search and other stuff.
+            //       We will put all necessary options into the new fancy text input.
+            /*
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> <?=$this->transEsc("Find")?></button>
+            <?php if ($advSearch): ?>
+            <a href="<?=$this->url($advSearch) . (($this->searchId ?? false) ? '?edit=' . $this->escapeHtmlAttr($this->searchId) : $hiddenFilterParams) ?>" class="btn btn-link" rel="nofollow"><?=$this->transEsc("Advanced")?></a>
+            <?php endif; ?>
+            <?php if ($geoUrl = $this->geocoords()->getSearchUrl($options)) : ?>
+                <a href="<?=$geoUrl ?>" class="btn btn-link"><?=$this->transEsc('Geographic Search')?></a>
+            <?php endif; ?>
+
+            <?php $shards = $options->getShards(); if ($options->showShardCheckboxes() && !empty($shards)): ?>
+            <?php
+            $selectedShards = $this->selectedShards ?? $options->getDefaultSelectedShards();
+            ?>
+            <br />
+            <?php foreach ($shards as $shard => $val): ?>
+                <?php $isSelected = empty($selectedShards) || in_array($shard, $selectedShards); ?>
+                <input type="checkbox" <?=$isSelected ? 'checked="checked" ' : ''?>name="shard[]" value='<?=$this->escapeHtmlAttr($shard)?>' /> <?=$this->transEsc($shard)?>
+            <?php endforeach; ?>
+            <?php endif; ?>
+            */
+            ?>
+            <?php if (($hasDefaultsApplied ?? false) || !empty($filterDetails)): ?>
+            <?php if ($options->getRetainFilterSetting()): ?>
+                <?php foreach ($filterDetails as $current): ?>
+                <input class="applied-filter" id="<?=$this->escapeHtmlAttr($current['id'])?>" type="hidden" name="filter[]" value="<?=$this->escapeHtmlAttr($current['value'])?>" />
+                <?php endforeach; ?>
+                <?php if ($hasDefaultsApplied ?? false): ?>
+                <input class="applied-filter" id="dfApplied" type="hidden" name="dfApplied" value="1" />
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php endif; ?>
+            <?php foreach ($hiddenFilters as $key => $filter): ?>
+            <?php foreach ($filter as $value): ?>
+                <input type="hidden" name="hiddenFilters[]" value="<?=$this->escapeHtmlAttr($key) . ':' . $this->escapeHtmlAttr($value)?>" />
+            <?php endforeach; ?>
+            <?php endforeach; ?>
+            <?php
+            /* Show hidden field for active search class when in combined handler mode. */
+            if ($this->searchbox()->combinedHandlersActive()) {
+                echo '<input type="hidden" name="activeSearchClassId" value="' . $this->escapeHtmlAttr($this->searchClassId) . '" />';
+            }
+            /* Load hidden limit preference from Session */
+            if (!empty($lastLimit)) {
+                echo '<input type="hidden" name="limit" value="' . $this->escapeHtmlAttr($lastLimit) . '" />';
+            }
+            if (!empty($lastSort)) {
+                echo '<input type="hidden" name="sort" value="' . $this->escapeHtmlAttr($lastSort) . '" />';
+            }
+            ?>
         </div>
     </div>
-    
-    <?php if ($handlerCount > 1): ?>
-      <select id="searchForm_type" class="searchForm_type form-control" name="type" data-native-menu="false" aria-label="<?=$this->transEscAttr("Search type")?>">
-        <?php $currentGroup = $insideGroup = false; ?>
-        <?php foreach ($handlers as $handler): ?>
-          <?php
-            if ($currentGroup !== ($handler['group'] ?? false)) {
-              $currentGroup = $handler['group'];
-              if ($insideGroup) {
-                echo '</optgroup>';
-              }
-              if ($currentGroup) {
-                echo '<optgroup label="' . $this->escapeHtmlAttr($currentGroup) . '">';
-                $insideGroup = true;
-              } else {
-                $insideGroup = false;
-              }
-            }
-          ?>
-          <option value="<?=$this->escapeHtmlAttr($handler['value'])?>"<?=$handler['selected'] ? ' selected="selected"' : ''?>><?=$handler['indent'] ? '-- ' : ''?><?=$this->transEsc($handler['label'])?></option>
-        <?php endforeach; ?>
-        <?php if ($insideGroup): ?>
-          </optgroup>
-        <?php endif; ?>
-      </select>
-    <?php elseif ($handlerCount == 1): ?>
-      <input type="hidden" name="type" value="<?=$this->escapeHtmlAttr($handlers[0]['value'])?>" />
-    <?php endif; ?>
-    <?php
-    // IPIS: Remove submit button, link to advanced search and other stuff.
-    //       We will put all necessary options into the new fancy text input.
-    /*
-    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> <?=$this->transEsc("Find")?></button>
-    <?php if ($advSearch): ?>
-      <a href="<?=$this->url($advSearch) . (($this->searchId ?? false) ? '?edit=' . $this->escapeHtmlAttr($this->searchId) : $hiddenFilterParams) ?>" class="btn btn-link" rel="nofollow"><?=$this->transEsc("Advanced")?></a>
-    <?php endif; ?>
-    <?php if ($geoUrl = $this->geocoords()->getSearchUrl($options)) : ?>
-        <a href="<?=$geoUrl ?>" class="btn btn-link"><?=$this->transEsc('Geographic Search')?></a>
-    <?php endif; ?>
-
-    <?php $shards = $options->getShards(); if ($options->showShardCheckboxes() && !empty($shards)): ?>
-      <?php
-      $selectedShards = $this->selectedShards ?? $options->getDefaultSelectedShards();
-      ?>
-      <br />
-      <?php foreach ($shards as $shard => $val): ?>
-        <?php $isSelected = empty($selectedShards) || in_array($shard, $selectedShards); ?>
-          <input type="checkbox" <?=$isSelected ? 'checked="checked" ' : ''?>name="shard[]" value='<?=$this->escapeHtmlAttr($shard)?>' /> <?=$this->transEsc($shard)?>
-      <?php endforeach; ?>
-    <?php endif; ?>
-    */
-    ?>
-    <?php if (($hasDefaultsApplied ?? false) || !empty($filterDetails)): ?>
-      <?php if ($options->getRetainFilterSetting()): ?>
-        <?php foreach ($filterDetails as $current): ?>
-          <input class="applied-filter" id="<?=$this->escapeHtmlAttr($current['id'])?>" type="hidden" name="filter[]" value="<?=$this->escapeHtmlAttr($current['value'])?>" />
-        <?php endforeach; ?>
-        <?php if ($hasDefaultsApplied ?? false): ?>
-          <input class="applied-filter" id="dfApplied" type="hidden" name="dfApplied" value="1" />
-        <?php endif; ?>
-      <?php endif; ?>
-    <?php endif; ?>
-    <?php foreach ($hiddenFilters as $key => $filter): ?>
-      <?php foreach ($filter as $value): ?>
-        <input type="hidden" name="hiddenFilters[]" value="<?=$this->escapeHtmlAttr($key) . ':' . $this->escapeHtmlAttr($value)?>" />
-      <?php endforeach; ?>
-    <?php endforeach; ?>
-    <?php
-      /* Show hidden field for active search class when in combined handler mode. */
-      if ($this->searchbox()->combinedHandlersActive()) {
-        echo '<input type="hidden" name="activeSearchClassId" value="' . $this->escapeHtmlAttr($this->searchClassId) . '" />';
-      }
-      /* Load hidden limit preference from Session */
-      if (!empty($lastLimit)) {
-        echo '<input type="hidden" name="limit" value="' . $this->escapeHtmlAttr($lastLimit) . '" />';
-      }
-      if (!empty($lastSort)) {
-        echo '<input type="hidden" name="sort" value="' . $this->escapeHtmlAttr($lastSort) . '" />';
-      }
-    ?>
-    <?=$this->context($this)->renderInContext(
-        'search/filters.phtml',
-        [
-          'params' => $params ?? null,
-          'urlQuery' => isset($results) ? $results->getUrlQuery() : null,
-          'filterList' => $showFilters ? $filterList : [],
-          'checkboxFilters' => $showFilters ? $checkboxFilters : [],
-          'searchClassId' => $this->searchClassId,
-          'searchType' => $this->searchType,
-        ]
-    );?>
+    <div class="ipis-activefilters-wrapper">
+        <?=$this->context($this)->renderInContext(
+            'search/filters.phtml',
+            [
+            'params' => $params ?? null,
+            'urlQuery' => isset($results) ? $results->getUrlQuery() : null,
+            'filterList' => $showFilters ? $filterList : [],
+            'checkboxFilters' => $showFilters ? $checkboxFilters : [],
+            'searchClassId' => $this->searchClassId,
+            'searchType' => $this->searchType,
+            ]
+        );?>
+    </div>
   </form>
 <?php endif; ?>
 
