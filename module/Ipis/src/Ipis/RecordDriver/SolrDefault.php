@@ -70,9 +70,8 @@ class SolrDefault extends \VuFind\RecordDriver\SolrDefault
             } else {
                 // Ipis: We have a pipe character = we have a description (url text)
                 $splitted_url = explode('|', $url, 2);
-                return ['url' => $splitted_url[1], 'desc' => $splitted_url[0]];
+                return ['url' => $splitted_url[1], 'desc' => $this->translate($splitted_url[0])];
             }
-            
         };
         return array_map($filter, (array)($this->fields['url'] ?? []));
     }
