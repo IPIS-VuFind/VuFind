@@ -4,10 +4,12 @@
 // Some variables - override from /home/betullam/dev/vufind-ipis/themes/bootstrap3/less/vendor/bootstrap/variables.less
 @brand-primary: #ed2326;
 @link-color: #ed2326;
+@link-hover-color: darken(@link-color, 25%);
 
 // Remove dotted border around links
 a, a:hover, a:active, a:focus {
     outline: none;
+    text-decoration: none;
 }
 
 header .container.navbar {
@@ -92,6 +94,26 @@ header .banner.container.navbar .search {
 // Remove because we don't need a mobile "3-bars" menu to pop up
 #header-collapse {
     display: none !important;
+}
+
+.active-filters .search-filter-remove:hover {
+	color: gray;
+}
+
+// Hide blue result formats badges in search results because the formats from the different sources are to inconsistent
+.result-formats {
+    display: none;
+}
+
+.ipis-footer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 15px;
+    margin-top: 20px;
+    background-color: #f5f5f5;
+	border-radius: 4px;
 }
 
 @media (min-width: 768px) {
