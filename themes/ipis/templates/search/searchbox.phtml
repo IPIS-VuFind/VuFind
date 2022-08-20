@@ -41,6 +41,94 @@
 ?>
 <?php $tabConfig = $this->searchTabs()->getTabConfig($this->searchClassId, $this->lookfor, $this->searchIndex, $this->searchType, $hiddenFilters); ?>
 <?php if ($this->searchType == 'advanced'): ?>
+  <?php // IPIS: We add the logo and the default search form to the advanced search screen.
+        // This is for having a consinstent layout when using the advanced search. The code
+        // is the same as below for the default search form, except that the active filter
+        // section was removed. ?>
+
+  <form id="searchForm" class="searchForm navbar-form navbar-left flip" method="get" action="<?=$this->url($basicSearch)?>" name="searchForm" autocomplete="off">
+    <div class="ipis-logo-searchform-wrapper">
+        <?php // IPIS: Div with background image for logo ?>
+        <div class="ipis-logo-wrapper">
+            <a class="navbar-brand lang-<?=$this->layout()->userLang ?>" href="<?=$this->url('home')?>">
+                <div class="ipis-logo"></div>
+            </a>
+        </div>
+
+        <div class="ipis-searchform-wrapper">
+            <?= $this->context($this)->renderInContext('search/searchTabs', ['searchTabs' => $tabConfig['tabs'], 'showCounts' => $tabConfig['showCounts']]); ?>
+            <?php $placeholder = $this->searchbox()->getPlaceholderText($tabConfig['selected']['id'] ?? null); ?>
+            
+            <?php // IPIS: Use bootstrap "Input groups" to add buttons into the searchbox ?>
+            <div class="input-group ipis-searchform-lookfor-input-group">
+                <input id="searchForm_lookfor" class="searchForm_lookfor form-control search-query<?php if($this->searchbox()->autocompleteEnabled($this->searchClassId)):?> autocomplete searcher:<?=$this->escapeHtmlAttr($this->searchClassId) ?><?=$this->searchbox()->autocompleteAutoSubmit($this->searchClassId) ? ' ac-auto-submit' : '' ?><?php endif ?>" type="text" name="lookfor" value="<?php /* IPIS: We don't display the value in the top search box when we are on the advanced search screen */ /*<?=$this->escapeHtmlAttr($this->lookfor) ?>*/ ?>"<?php if ($placeholder): ?> placeholder="<?=$this->transEscAttr($placeholder) ?>"<?php endif ?> aria-label="<?=$this->transEscAttr("search_terms")?>" />
+                <div class="input-group-btn ipis-searchform-lookfor-input-group-btn">
+                    <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                    <?php if ($advSearch): ?>
+                        <a href="<?=$this->url($advSearch) . (($this->searchId ?? false) ? '?edit=' . $this->escapeHtmlAttr($this->searchId) : $hiddenFilterParams) ?>" class="btn btn-link" rel="nofollow"><i class="fa fa-search-plus"></i></a>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <?php if ($handlerCount > 1): ?>
+            <select id="searchForm_type" class="searchForm_type form-control" name="type" data-native-menu="false" aria-label="<?=$this->transEscAttr("Search type")?>">
+                <?php $currentGroup = $insideGroup = false; ?>
+                <?php foreach ($handlers as $handler): ?>
+                <?php
+                    if ($currentGroup !== ($handler['group'] ?? false)) {
+                    $currentGroup = $handler['group'];
+                    if ($insideGroup) {
+                        echo '</optgroup>';
+                    }
+                    if ($currentGroup) {
+                        echo '<optgroup label="' . $this->escapeHtmlAttr($currentGroup) . '">';
+                        $insideGroup = true;
+                    } else {
+                        $insideGroup = false;
+                    }
+                    }
+                ?>
+                <option value="<?=$this->escapeHtmlAttr($handler['value'])?>"<?=$handler['selected'] ? ' selected="selected"' : ''?>><?=$handler['indent'] ? '-- ' : ''?><?=$this->transEsc($handler['label'])?></option>
+                <?php endforeach; ?>
+                <?php if ($insideGroup): ?>
+                </optgroup>
+                <?php endif; ?>
+            </select>
+            <?php elseif ($handlerCount == 1): ?>
+            <input type="hidden" name="type" value="<?=$this->escapeHtmlAttr($handlers[0]['value'])?>" />
+            <?php endif; ?>
+            <?php if (($hasDefaultsApplied ?? false) || !empty($filterDetails)): ?>
+            <?php if ($options->getRetainFilterSetting()): ?>
+                <?php foreach ($filterDetails as $current): ?>
+                <input class="applied-filter" id="<?=$this->escapeHtmlAttr($current['id'])?>" type="hidden" name="filter[]" value="<?=$this->escapeHtmlAttr($current['value'])?>" />
+                <?php endforeach; ?>
+                <?php if ($hasDefaultsApplied ?? false): ?>
+                <input class="applied-filter" id="dfApplied" type="hidden" name="dfApplied" value="1" />
+                <?php endif; ?>
+            <?php endif; ?>
+            <?php endif; ?>
+            <?php foreach ($hiddenFilters as $key => $filter): ?>
+            <?php foreach ($filter as $value): ?>
+                <input type="hidden" name="hiddenFilters[]" value="<?=$this->escapeHtmlAttr($key) . ':' . $this->escapeHtmlAttr($value)?>" />
+            <?php endforeach; ?>
+            <?php endforeach; ?>
+            <?php
+            /* Show hidden field for active search class when in combined handler mode. */
+            if ($this->searchbox()->combinedHandlersActive()) {
+                echo '<input type="hidden" name="activeSearchClassId" value="' . $this->escapeHtmlAttr($this->searchClassId) . '" />';
+            }
+            /* Load hidden limit preference from Session */
+            if (!empty($lastLimit)) {
+                echo '<input type="hidden" name="limit" value="' . $this->escapeHtmlAttr($lastLimit) . '" />';
+            }
+            if (!empty($lastSort)) {
+                echo '<input type="hidden" name="sort" value="' . $this->escapeHtmlAttr($lastSort) . '" />';
+            }
+            ?>
+        </div>
+    </div>
+  </form>
+
   <div class="navbar-form navbar-left flip">
     <?php $tabs = $this->context($this)->renderInContext('search/searchTabs', ['searchTabs' => $tabConfig['tabs'], 'showCounts' => false]); ?>
     <?php if (!empty($tabs)): ?><?=$tabs ?><div class="tab-content clearfix"><?php endif; ?>
