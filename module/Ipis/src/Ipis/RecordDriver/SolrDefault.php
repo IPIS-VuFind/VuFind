@@ -75,4 +75,92 @@ class SolrDefault extends \VuFind\RecordDriver\SolrDefault
         };
         return array_map($filter, (array)($this->fields['url'] ?? []));
     }
+
+    /**
+     * Returns one of three things: a full URL to a thumbnail preview of the record
+     * if an image is available in an external system; an array of parameters to
+     * send to VuFind's internal cover generator if no fixed URL exists; or false
+     * if no thumbnail can be generated.
+     * 
+     * IPIS: Get icon based on record provenance
+     *
+     * @param string $size Size of thumbnail (small, medium or large -- small is
+     * default).
+     *
+     * @return string|array|bool
+     */
+    public function getThumbnail($size = 'small')
+    {
+        // IPIS: Don't show thumbnail from URL in Solr index field "thumbnail"
+        /*
+        if (!empty($this->fields['thumbnail'])) {
+            return $this->fields['thumbnail'];
+        }
+        */
+
+        // IPIS: Get record format (= ihs, wifo, ...) for getting the appropriate
+        // icon for the record. See information on "getThumbnail" on wiki page
+        // https://vufind.org/wiki/development:architecture:record_driver_method_master_list
+        $arr = [
+            //'author'     => mb_substr($this->getPrimaryAuthor(), 0, 300, 'utf-8'),
+            //'callnumber' => $this->getCallNumber(),
+            'size'       => $size,
+            //'title'      => mb_substr($this->getTitle(), 0, 300, 'utf-8'),
+            //'recordid'   => $this->getUniqueID(),
+            //'source'   => $this->getSourceIdentifier(),
+            'contenttype' => $this->getRecordFormat(),
+        ];
+        
+        // IPIS: We don't need these IDs because we only show icons
+        /*
+        if ($isbn = $this->getCleanISBN()) {
+            $arr['isbn'] = $isbn;
+        }
+        if ($issn = $this->getCleanISSN()) {
+            $arr['issn'] = $issn;
+        }
+        if ($oclc = $this->getCleanOCLCNum()) {
+            $arr['oclc'] = $oclc;
+        }
+        if ($upc = $this->getCleanUPC()) {
+            $arr['upc'] = $upc;
+        }
+        if ($nbn = $this->getCleanNBN()) {
+            $arr['nbn'] = $nbn['nbn'];
+        }
+        if ($ismn = $this->getCleanISMN()) {
+            $arr['ismn'] = $ismn;
+        }
+        if ($uuid = $this->getCleanUuid()) {
+            $arr['uuid'] = $uuid;
+        }
+        */
+        
+        // IPIS: We don't need the extra details from an ILS driver because we don't
+        // have an ILS.
+        /*
+        // If an ILS driver has injected extra details, check for IDs in there
+        // to fill gaps:
+        if ($ilsDetails = $this->getExtraDetail('ils_details')) {
+            $idTypes = ['isbn', 'issn', 'oclc', 'upc', 'nbn', 'ismn', 'uuid'];
+            foreach ($idTypes as $key) {
+                if (!isset($arr[$key]) && isset($ilsDetails[$key])) {
+                    $arr[$key] = $ilsDetails[$key];
+                }
+            }
+        }
+        */
+        
+        return $arr;
+    }
+
+    /**
+     * IPIS: Get the value from the "record_format" field (ihs, wifo, ...)
+     *
+     * @return String
+     */
+    public function getRecordFormat()
+    {
+        return $this->fields['record_format'] ?? 'unknown';
+    }
 }
