@@ -112,8 +112,43 @@ header .banner.container.navbar .search {
     justify-content: space-between;
     padding: 8px 15px;
     margin-top: 20px;
-    background-color: #f5f5f5;
-	border-radius: 4px;
+    //background-color: #f5f5f5;
+    background-color: gray;
+	//border-radius: 4px;
+}
+
+.ipis-footer-separator {
+    color: rgb(189, 189, 189);
+    color: darken(#f5f5f5, 25%);
+}
+
+.ipis-footer a {
+    color: white;
+}
+
+// Footer always at bottom
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    // Margin-bottom is the same as the fixed height of the footer
+    margin-bottom: 84px;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    //left: 0;
+    //right: 0;
+    // Fixed height of the footer
+    //height: 84px;
+    text-align: center;
+    
+    width: 100%;
+    padding: 0;
+}
+.ipis-footer {
+    flex-wrap: wrap;
 }
 
 @media (min-width: 768px) {
