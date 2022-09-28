@@ -44,6 +44,79 @@ namespace Ipis\RecordDriver;
  */
 class SolrDefault extends \VuFind\RecordDriver\SolrDefault
 {
+
+    /**
+     * These Solr fields should NEVER be used for snippets.  (We exclude author
+     * and title because they are already covered by displayed fields; we exclude
+     * spelling because it contains lots of fields jammed together and may cause
+     * glitchy output; we exclude ID because random numbers are not helpful).
+     *
+     * IPIS: Added "..._txtN" and "..._txtN_mv" fields. Added "participants_txt_mv".
+     * Added "id_txtP".
+     * 
+     * @var array
+     */
+    protected $forbiddenSnippetFields = [
+        'author', 'title', 'title_short', 'title_full',
+        'title_full_unstemmed', 'title_auth', 'title_sub', 'spelling', 'id',
+        'ctrlnum', 'author_variant', 'author2_variant', 'fullrecord',
+        'work_keys_str_mv', 'title_txtN', 'title_short_txtN', 'title_sub_txtN',
+        'participants_txtN_mv', 'participants_txt_mv', 'id_txtP'
+    ];
+
+    /**
+     * Get a highlighted title string, if available.
+     * 
+     * IPIS: We use field "title_txtN" if available so that auto-truncated search
+     * terms (realized with Solr EdgeNGramFilterFactory) also get hightlighted
+     *
+     * @return string
+     */
+    public function getHighlightedTitle()
+    {
+        // Don't check for highlighted values if highlighting is disabled:
+        if (!$this->highlight) {
+            return '';
+        }
+        
+        // Use "title_txtN". Fallback to "title".
+        if (isset($this->highlightDetails['title_txtN'])) {
+            $returnVal = $this->highlightDetails['title_txtN'][0] ?? '';
+        } else {
+            $returnVal = $this->highlightDetails['title'][0] ?? '';
+        }
+
+        return $returnVal;
+    }
+
+    /**
+     * Get highlighted author data, if available.
+     * 
+     * IPIS: We use field "participants_txtN_mv" if available so that auto-truncated
+     * search terms (realized with Solr EdgeNGramFilterFactory) also get hightlighted
+     * 
+     * @return array
+     */
+    public function getRawAuthorHighlights()
+    {
+        // Don't check for highlighted values if highlighting is disabled:
+        if (!$this->highlight) {
+            return [];
+        }
+
+        // Return EdgeNGramFilterFactory Solr field
+        if (isset($this->highlightDetails['participants_txtN_mv'])) {
+            return $this->highlightDetails['participants_txtN_mv'];
+        }
+        
+        // Fallback to default author Solr field
+        if (isset($this->highlightDetails['author'])) {
+            return $this->highlightDetails['author'];
+        }
+
+        return [];
+    }
+
     /**
      * Return an array of associative URL arrays with one or more of the following
      * keys:
