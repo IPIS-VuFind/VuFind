@@ -1,0 +1,11 @@
+<?php
+  $containerSource = $this->driver->getSourceIdentifier();
+  $containerID = $this->driver->getContainerRecordID();
+  $ref = $this->driver->getContainerReference();
+  // IPIS: Using ContainerTitle search in link instead of JorunalTitle
+  $linkEsc = $containerID
+    ? $this->escapeHtmlAttr($this->recordLinker()->getUrl("$containerSource|$containerID"))
+    : $this->record($this->driver)->getLink('containertitle', $data);
+?>
+<a href="<?=$linkEsc?>"><?=$this->escapeHtml($data)?></a>
+<?=empty($ref) ? '' : $this->escapeHtml($ref)?>
