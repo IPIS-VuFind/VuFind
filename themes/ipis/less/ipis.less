@@ -27,7 +27,7 @@ header .banner.container.navbar .search {
     padding-left: 0;
 }
 
-.nav.searchbox, #searchForm, .ipis-searchform-lookfor-input-group, #searchForm_lookfor {
+.nav.searchbox, #searchForm, .ipis-searchform-lookfor-input-group, .ipis-searchform-lookfor-input-group #searchForm_lookfor {
     width: 100%;
 }
 
@@ -58,8 +58,6 @@ header .banner.container.navbar .search {
 #searchForm_lookfor {
     max-width: 100%;
     height: auto;
-    font-size: x-large;
-
     // Bottom border
 	box-shadow: none;
     border-top: none;
@@ -68,6 +66,9 @@ header .banner.container.navbar .search {
     border-radius: 0;
 	border-bottom: gray;
 	border-bottom-style: solid;
+}
+.ipis-searchform-lookfor-input-group #searchForm_lookfor {
+    font-size: x-large;
 }
 
 .ipis-searchform-lookfor-input-group-btn {
@@ -112,9 +113,7 @@ header .banner.container.navbar .search {
     justify-content: space-evenly;
     padding: 8px 15px;
     margin-top: 20px;
-    //background-color: #f5f5f5;
     background-color: #595959;
-	//border-radius: 4px;
 }
 
 .ipis-footer-separator {
@@ -138,12 +137,7 @@ body {
 footer {
     position: absolute;
     bottom: 0;
-    //left: 0;
-    //right: 0;
-    // Fixed height of the footer
-    //height: 84px;
     text-align: center;
-    
     width: 100%;
     padding: 0;
 }
@@ -151,12 +145,154 @@ footer {
     flex-wrap: wrap;
 }
 
-@media (min-width: 768px) {
-    .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
-        margin-left: 0;
+// Only for the home screen
+.template-dir-search.template-name-home {
+    
+    #ipis-home-container {
+        display: flex;
+        flex-direction: column;
+        width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #ipis-home-heading {
+        font-family: Helvetica, Arial, sans-serif;
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+    .ipis-text {
+        font-family: 'karla';
+        font-weight: 300;
+        display: flex;
+        flex-direction: column;
+        font-size: 40px;
+        color: black;
+        margin-left: 55px;
+        text-align: right;
+    }
+    .ipis-hohe-emph {
+        color: @brand-primary;
+    }
+    .ipis-logo {
+        height: 115px;
+        width: 325px;
+    }
+    #ipis-home-infotext {
+        font-family: 'karla';
+        font-weight: 500;
+        font-size: 20px;
+        margin-top: 20px;
+        color: white;
+        background-color: @brand-primary;
+        text-align: center;
+    }
+
+    #ipis-home-searchbox {
+        display: flex;
+        margin-top: 80px;
+        margin-bottom: 80px;
+    }
+    .ipis-searchform-conatiner {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    .ipis-home-lookfor {
+        font-family: 'karla';
+        font-weight: 300 !important;
+        font-size: 50px !important;
+        border-bottom: grey solid;
+        padding-right: 50px;    
+
+        width: 40%;
+        -webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;
+    }
+    .ipis-home-lookfor:focus {
+        width: 100% !important;
+        border-bottom: @brand-primary solid !important;
+    }
+    .ipis-searchform-lookfor-input-group-btn {
+        border: none !important;
+        margin-left: -50px;
+    }
+    .ipis-searchform-lookfor-input-group-btn .btn {
+        font-size: 35px !important;
+    }
+
+    #ots-feed-container {
+        font-family: 'karla';
+    }
+    .ots-feed-container-heading {
+        font-family: 'karla';
+        font-weight: 500;
+        font-size: 20px;
+        margin-top: 20px;
+        color: white;
+        background-color: #595959;
+        text-align: center;
+    }
+    .ots-feed-posts {
+        background-color: rgba(0, 0, 0, 0.07);
+        padding: 30px;
+    }
+    .ots-feed-post {
+        padding-bottom: 10px;
+    }
+    .ots-feed-post-heading, .ots-feed-post-lead, .ots-feed-post-date-emittent {
+        font-size: 16px;
+    }
+    .ots-feed-post-heading {
+        font-weight: 500;
+    }
+    .ots-feed-post-lead {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .ots-feed-post-date-emittent {
+        font-size: 14px;
+        color: #595959;
+    }
+    .ots-feed-more-link {
+        background-color: rgba(0, 0, 0, 0.07);
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-bottom: 30px;
+        font-size: 16px;
+        text-align: right;
     }
 }
 
+// 1000px or less
+@media (max-width: 1000px) {
+    // Only the home screen
+    .template-dir-search.template-name-home {
+        // Set width from fixed width to percentage
+        #ipis-home-container {
+            width: 100%;
+        }
+        // Logo and text should be on top of each other
+        #ipis-home-heading {
+            flex-direction: column;
+        }
+        // Center the text
+        .ipis-text {
+            text-align: center;
+            margin-left: 0;
+        }
+        // Smaller logo
+        .ipis-logo {
+            height: 80px !important;
+            width: 225px !important;
+        }
+    }
+}
+
+// 650px or less
 @media (max-width: 650px) {
     // Small logo on smaller screens
     .ipis-logo {
@@ -167,11 +303,66 @@ footer {
         width: 72px;
         height: 71px;
     }
+
+    // Only the home screen
+    .template-dir-search.template-name-home {
+        // On the home screen, don't use the "small" logo version
+        .ipis-logo {
+            background-image: url('../images/ipis-logo.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 80px !important;
+            width: 225px !important;
+        }
+        // Smaller text
+        .ipis-text {
+            font-size: 30px;
+        }
+        // Bigger width of search input field so that we see the whole placeholder on
+        // smaller screens
+        .ipis-home-lookfor {
+            width: 65% !important;
+        }
+        // Smaller font size for the search input field so that we see more
+        // characters on smaller screens
+        #searchForm_lookfor {
+            font-size: 30px !important;
+            font-weight: 400 !important;
+        }
+    }
 }
 
+// 370px or less
 @media (max-width: 370px) {
     // No logo on very small screens
     .ipis-logo {
         display: none;
+    }
+    
+    // Only the home screen
+    .template-dir-search.template-name-home {
+        // Show logo on home screen
+        .ipis-logo {
+            display: block;
+            background-image: url('../images/ipis-logo.png');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 80px !important;
+            width: 225px !important;
+        }
+        // Smaller text for smaller screens
+        .ipis-text {
+            font-size: 25px;
+        }
+    }
+}
+
+// Overwriting VuFind default
+// 768px or larger
+@media (min-width: 768px) {
+    .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
+        margin-left: 0;
     }
 }
