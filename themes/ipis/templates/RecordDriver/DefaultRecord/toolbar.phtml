@@ -1,4 +1,11 @@
 <?php
+// IPIS: Remove whole toolbar as requested by customer. Just add two <br /> for styling purpouses.
+?>
+<br /><br />
+
+<?php
+/*
+<?php
   $addThis = $this->addThis();
   if (!empty($addThis)) {
     $this->headScript()->appendFile('https://s7.addthis.com/js/250/addthis_widget.js?pub=' . urlencode($addThis));
@@ -16,9 +23,7 @@
 
     <?php // IPIS: Remove "Send as e-mail" from the toolbar in the detail record view ?>
     <?php
-    /*
-    <li role="none"><a class="mail-record toolbar-btn btn-type-email" data-lightbox href="<?=$this->escapeHtmlAttr($this->recordLinker()->getActionUrl($this->driver, 'Email'))?>" rel="nofollow"><?=$this->transEsc('Email this')?></a></li>
-    */
+    //<li role="none"><a class="mail-record toolbar-btn btn-type-email" data-lightbox href="<?=$this->escapeHtmlAttr($this->recordLinker()->getActionUrl($this->driver, 'Email'))?>" rel="nofollow"><?=$this->transEsc('Email this')?></a></li>
     ?>
     <li><a class="print-record toolbar-btn btn-type-print" href="<?=$this->url()->addQueryParameters(['print' => true])?>" rel="nofollow"><?=$this->transEsc('Print')?></a></li>
 
@@ -50,3 +55,4 @@
     <li role="none"><a class="permalink-record toolbar-btn btn-type-permalink" data-lightbox href="<?=$this->escapeHtmlAttr($this->recordLinker()->getActionUrl($this->driver, 'Permalink'))?>" rel="nofollow"><?=$this->transEsc('permanent_link')?></a></li>
   </ul>
 </nav>
+*/
