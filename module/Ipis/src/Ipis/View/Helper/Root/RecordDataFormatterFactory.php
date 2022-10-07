@@ -51,6 +51,7 @@ class RecordDataFormatterFactory
     public function getDefaultCoreSpecs()
     {
         $spec = new \VuFind\View\Helper\Root\RecordDataFormatter\SpecBuilder();
+        $spec->setTemplateLine('linkToDocument', true, 'data-onlineAccess.phtml');
         $spec->setTemplateLine(
             'Published in',
             'getContainerTitle',
@@ -114,7 +115,7 @@ class RecordDataFormatterFactory
             'data-childRecords.phtml',
             ['allowZero' => false]
         );
-        $spec->setTemplateLine('Online Access', true, 'data-onlineAccess.phtml');
+        
         $spec->setTemplateLine(
             'Related Items',
             'getAllRecordLinks',
