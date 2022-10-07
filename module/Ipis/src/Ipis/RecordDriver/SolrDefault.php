@@ -61,7 +61,7 @@ class SolrDefault extends \VuFind\RecordDriver\SolrDefault
         'title_full_unstemmed', 'title_auth', 'title_sub', 'spelling', 'id',
         'ctrlnum', 'author_variant', 'author2_variant', 'fullrecord',
         'work_keys_str_mv', 'title_txtN', 'title_short_txtN', 'title_sub_txtN',
-        'participants_txtN_mv', 'participants_txt_mv', 'id_txtP'
+        'participants_txtN_mv', 'participants_txt_mv', 'id_txtP', 'container_title'
     ];
 
     /**
