@@ -52,7 +52,7 @@ class SolrDefault extends \VuFind\RecordDriver\SolrDefault
      * glitchy output; we exclude ID because random numbers are not helpful).
      *
      * IPIS: Added "..._txtN" and "..._txtN_mv" fields. Added "participants_txt_mv".
-     * Added "id_txtP".
+     * Added "id_txtP". Added "container_title" and "container_title_txtN".
      * 
      * @var array
      */
@@ -61,7 +61,8 @@ class SolrDefault extends \VuFind\RecordDriver\SolrDefault
         'title_full_unstemmed', 'title_auth', 'title_sub', 'spelling', 'id',
         'ctrlnum', 'author_variant', 'author2_variant', 'fullrecord',
         'work_keys_str_mv', 'title_txtN', 'title_short_txtN', 'title_sub_txtN',
-        'participants_txtN_mv', 'participants_txt_mv', 'id_txtP', 'container_title'
+        'participants_txtN_mv', 'participants_txt_mv', 'id_txtP', 'container_title',
+        'container_title_txtN'
     ];
 
     /**
