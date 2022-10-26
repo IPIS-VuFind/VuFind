@@ -1,0 +1,22 @@
+<?php
+/* IPIS: Data in variables $feed and $link comes from \Ipis\ContentBlock\OtsFeed->getContext() */
+?>
+<div id="ots-feed-container">
+    <div class="ots-feed-container-heading"><?=$this->transEsc('otsFeedHeading')?></div>
+    <div class="ots-feed-posts">
+        <?php if($feed->ergebnisse): ?>
+            <?php foreach ($feed->ergebnisse as $post): ?>
+                <div class="ots-feed-post">
+                    <div class="ots-feed-post-heading"><a href="<?=$this->escapeHtmlAttr($post->WEBLINK)?>" target="_blank"><?=$this->escapeHtml($post->TITEL)?></a></div>
+                    <div>
+                        <div class="ots-feed-post-lead"><?=$this->escapeHtml($post->LEAD)?></div>
+                        <div class="ots-feed-post-date-emittent"><?=$this->escapeHtml(date("d.m.Y", strtotime($post->DATUM)))?>, <?=$this->escapeHtml($post->EMITTENT)?></div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    <div class="ots-feed-more-link">
+        <a href="<?=$link?>" target="_blank"><?=$this->transEsc('more')?> ...</a>
+    </div>
+</div>
