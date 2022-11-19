@@ -237,4 +237,22 @@ class SolrDefault extends \VuFind\RecordDriver\SolrDefault
     {
         return $this->fields['record_format'] ?? 'unknown';
     }
+
+    /**
+     * IPIS: Check if there is a review result
+     *
+     * @return boolean
+     */
+    public function hasReviewResult() {
+        return isset($this->fields['review_result_txt']);
+    }
+
+    /**
+     * IPIS: Get contents of review result field
+     *
+     * @return array|null Content of review result field
+     */
+    public function getReviewResult() {
+        return $this->fields['review_result_txt'] ?? null;
+    }
 }
