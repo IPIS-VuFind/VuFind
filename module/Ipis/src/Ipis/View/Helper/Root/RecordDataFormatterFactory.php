@@ -125,4 +125,53 @@ class RecordDataFormatterFactory
         return $spec->getArray();
     }
 
+    /**
+     * Get default specifications for displaying data in the description tab.
+     *
+     * IPIS: Use template for pyhsical description
+     * 
+     * @return array
+     */
+    public function getDefaultDescriptionSpecs()
+    {
+        $spec = new \VuFind\View\Helper\Root\RecordDataFormatter\SpecBuilder();
+        $spec->setTemplateLine('Summary', true, 'data-summary.phtml');
+        $spec->setLine('Published', 'getDateSpan');
+        $spec->setLine('Item Description', 'getGeneralNotes');
+        // IPIS: Use template for pyhsical description
+        $spec->setTemplateLine('Physical Description', 'getPhysicalDescriptions', 'data-physicalDescriptions.phtml');
+        $spec->setLine('Publication Frequency', 'getPublicationFrequency');
+        $spec->setLine('Playing Time', 'getPlayingTimes');
+        $spec->setLine('Format', 'getSystemDetails');
+        $spec->setLine('Audience', 'getTargetAudienceNotes');
+        $spec->setLine('Awards', 'getAwards');
+        $spec->setLine('Production Credits', 'getProductionCredits');
+        $spec->setLine('Bibliography', 'getBibliographyNotes');
+        $spec->setLine(
+            'ISBN',
+            'getISBNs',
+            null,
+            ['itemPrefix' => '<span property="isbn">', 'itemSuffix' => '</span>']
+        );
+        $spec->setLine(
+            'ISSN',
+            'getISSNs',
+            null,
+            ['itemPrefix' => '<span property="issn">', 'itemSuffix' => '</span>']
+        );
+        $spec->setLine(
+            'DOI',
+            'getCleanDOI',
+            null,
+            ['itemPrefix' => '<span property="identifier">',
+             'itemSuffix' => '</span>']
+        );
+        $spec->setLine('Related Items', 'getRelationshipNotes');
+        $spec->setLine('Access', 'getAccessRestrictions');
+        $spec->setLine('Finding Aid', 'getFindingAids');
+        $spec->setLine('Publication_Place', 'getHierarchicalPlaceNames');
+        $spec->setTemplateLine('Author Notes', true, 'data-authorNotes.phtml');
+        return $spec->getArray();
+    }
+
 }
