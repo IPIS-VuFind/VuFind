@@ -57,14 +57,43 @@
       <?=$this->record($this->driver)->renderTemplate('versions-link.phtml')?>
     <?php endif; ?>
 
-    <?php $summary = $this->driver->getSummary(); $summary = isset($summary[0]) ? $this->escapeHtml($summary[0]) : false; ?>
+    <?php // IPIS: Clean descriptions - this is especially necessary for Wordpress summaries ?>
+    <?php
+    $summary = $this->driver->getSummary();
+    $firstSummaryDisplay = false;
+    if (isset($summary[0])) {
+        $firstSummaryRaw = html_entity_decode(trim($summary[0]));
+        $firstSummaryRaw = preg_replace ('/<[^>]*>/', ' ', $firstSummaryRaw); 
+        $firstSummaryRaw = str_replace('/\r/m', '', $firstSummaryRaw);
+        $firstSummaryRaw = str_replace('/\n/m', '', $firstSummaryRaw);
+        $firstSummaryRaw = str_replace('/\t/m', '', $firstSummaryRaw);
+        $firstSummaryDisplay = trim(preg_replace('/ {2,}/', ' ', $firstSummaryRaw));
+    }
+    ?>
+    <?php if ($firstSummaryDisplay): ?>
+        <?=$this->truncate($firstSummaryDisplay, 300)?>
+        <?php if(strlen($firstSummaryDisplay) > 300): ?>
+            <p><a href="<?=$this->escapeHtmlAttr($this->recordLinker()->getTabUrl($this->driver, 'Description'))?>#tabnav"><?=$this->transEsc('Full description')?></a></p>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <?php
+    // IPIS: Original summary code
+    /*
+    $summary = $this->driver->getSummary(); $summary = isset($summary[0]) ? $this->escapeHtml($summary[0]) : false;
     <?php if ($summary): ?>
-      <p><?=$this->truncate($summary, 300)?></p>
+      <p>
+        <?=$this->truncate(html_entity_decode($summary), 300)?>
+        <?=html_entity_decode($summary)?>
+    
+      </p>
 
       <?php if(strlen($summary) > 300): ?>
         <p><a href="<?=$this->escapeHtmlAttr($this->recordLinker()->getTabUrl($this->driver, 'Description'))?>#tabnav"><?=$this->transEsc('Full description')?></a></p>
       <?php endif; ?>
     <?php endif; ?>
+    */
+    ?>
 
     <?php if ($this->userlist()->getMode() !== 'disabled'): ?>
       <?php /* Display the lists that this record is saved to */ ?>
